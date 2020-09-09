@@ -7,7 +7,7 @@ import(
 	"net/http"
 	// "math/rand"
 	// "strconv"
-	"github.com/gorilla/mux"
+	"github.com/gorilla/mux"  // must be installed by "go get -u github.com/gorilla/mux"
 )
 
 type Book struct {
@@ -29,7 +29,15 @@ func getbooks(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(books)
 }
 func getbook(w http.ResponseWriter, r *http.Request) {
-
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r); //Get id
+	for _, item := range books {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Book{})
 }
 func createbook(w http.ResponseWriter, r *http.Request) {
 
